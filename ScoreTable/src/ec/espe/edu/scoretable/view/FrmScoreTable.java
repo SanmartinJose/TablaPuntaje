@@ -1,6 +1,7 @@
 
 package ec.espe.edu.scoretable.view;
 
+import com.mongodb.client.model.Filters;
 import ec.edu.espe.scoretable.model.Player;
 import ec.edu.espe.scoretable.utils.MongoDBConnection;
 import org.bson.Document;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -175,6 +177,11 @@ public class FrmScoreTable extends javax.swing.JFrame {
         );
 
         btnDelete.setText("Delete Player");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Clear");
 
@@ -283,6 +290,40 @@ public class FrmScoreTable extends javax.swing.JFrame {
         model.addRow(new Object[]{name, score, time});
     }
     }//GEN-LAST:event_btnRefreshActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        String playerName = txtPlayerName.getText().trim();
+
+    // Verificar que el nombre del jugador no esté vacío
+    if (playerName.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Por favor, ingresa el nombre del jugador a eliminar.", "Campo vacío", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Realizar una consulta en la base de datos para encontrar el documento del jugador
+    Document playerDocument = mongoDBConnection.getCollection().find(Filters.eq("name", playerName)).first();
+
+    if (playerDocument != null) {
+        // Mostrar el cuadro de diálogo de confirmación
+        int option = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que deseas eliminar al jugador '" + playerName + "'?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+
+        if (option == JOptionPane.YES_OPTION) {
+            // Si el usuario elige "Sí", eliminar el documento de la base de datos
+            mongoDBConnection.getCollection().deleteOne(playerDocument);
+
+            // Limpiar el campo txtPlayerName después de eliminar el jugador
+            txtPlayerName.setText("");
+
+            // Actualizar la tabla después de eliminar el jugador
+            btnRefreshActionPerformed(evt);
+
+            JOptionPane.showMessageDialog(this, "Jugador eliminado correctamente.", "Eliminado exitoso", JOptionPane.INFORMATION_MESSAGE);
+        }
+    } else {
+        // Si no se encontró el jugador, mostrar un mensaje de error
+        JOptionPane.showMessageDialog(this, "El jugador con el nombre '" + playerName + "' no fue encontrado.", "Jugador no encontrado", JOptionPane.WARNING_MESSAGE);
+    }
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
     public void EmptyFields() {
         // Limpiar los campos después de guardar
