@@ -4,6 +4,7 @@ package ec.espe.edu.scoretable.view;
 import com.mongodb.client.model.Filters;
 import ec.edu.espe.scoretable.model.Player;
 import ec.edu.espe.scoretable.utils.MongoDBConnection;
+import ec.edu.espe.scoretable.utils.Validation;
 import org.bson.Document;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,6 +28,9 @@ public class FrmScoreTable extends javax.swing.JFrame {
         initComponents();
         mongoDBConnection = new MongoDBConnection();
         mongoDBConnection.connection("2Truths1LiePlayers");
+        lblAlert1.setVisible(false);
+        lblAlert2.setVisible(false);
+        lblAlert3.setVisible(false);
     }
 
     /**
@@ -53,6 +57,9 @@ public class FrmScoreTable extends javax.swing.JFrame {
         tblInfo = new javax.swing.JTable();
         jSeparator2 = new javax.swing.JSeparator();
         btnRefresh = new javax.swing.JButton();
+        lblAlert1 = new javax.swing.JLabel();
+        lblAlert2 = new javax.swing.JLabel();
+        lblAlert3 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         btnDelete = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
@@ -119,6 +126,15 @@ public class FrmScoreTable extends javax.swing.JFrame {
             }
         });
 
+        lblAlert1.setForeground(new java.awt.Color(255, 51, 51));
+        lblAlert1.setText("*Ingrese un Nombre Valido");
+
+        lblAlert2.setForeground(new java.awt.Color(255, 51, 51));
+        lblAlert2.setText("*Ingrese un Tiempo Valido");
+
+        lblAlert3.setForeground(new java.awt.Color(255, 51, 51));
+        lblAlert3.setText("*Ingrese un Puntaje Valido");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -137,11 +153,18 @@ public class FrmScoreTable extends javax.swing.JFrame {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
                                 .addComponent(btnRefresh))
-                            .addComponent(txtPlayerName, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(txtScore, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
-                                .addComponent(txtTime, javax.swing.GroupLayout.Alignment.LEADING)))
-                        .addGap(0, 78, Short.MAX_VALUE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtPlayerName, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(txtScore, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+                                        .addComponent(txtTime, javax.swing.GroupLayout.Alignment.LEADING)))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblAlert2)
+                                    .addComponent(lblAlert1)
+                                    .addComponent(lblAlert3))))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jSeparator2))
@@ -156,15 +179,18 @@ public class FrmScoreTable extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(txtPlayerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPlayerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblAlert1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(txtTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblAlert2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(txtScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblAlert3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAdd)
@@ -192,7 +218,7 @@ public class FrmScoreTable extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(53, 53, 53)
                 .addComponent(btnDelete)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 103, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addGap(62, 62, 62))
         );
@@ -240,21 +266,27 @@ public class FrmScoreTable extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-       String nombre = txtPlayerName.getText();
-        int tiempo = Integer.parseInt(txtTime.getText());
-        int puntajeTotal = Integer.parseInt(txtScore.getText());
+       Validation validation = new Validation();
+        if(txtPlayerName.getText().isEmpty() || txtScore.getText().isEmpty() || txtTime.getText().isEmpty()){
+            lblAlert1.setVisible(true);
+            lblAlert2.setVisible(true);
+            lblAlert3.setVisible(true);
+            JOptionPane.showMessageDialog(rootPane, "Datos incorrectos", "Error", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+        String nombre = validation.validateName(txtPlayerName);
+        int tiempo = validation.validateNumber(txtTime);
+        int puntajeTotal = validation.validateNumber(txtScore);
 
-        // Crear un objeto Player con los datos ingresados
         Player player = new Player(nombre, puntajeTotal, tiempo);
-
-        // Convertir el objeto Player a un Document de MongoDB
+        
         Document playerDocument = new Document("name", player.getName())
-                                    .append("score", player.getScore())
-                                    .append("time", player.getTime());
+                .append("score", player.getScore())
+                .append("time", player.getTime());
 
         mongoDBConnection.getCollection().insertOne(playerDocument);
-
+        JOptionPane.showMessageDialog(rootPane, "Datos guardados", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         EmptyFields();
+        }
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
@@ -382,6 +414,9 @@ public class FrmScoreTable extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JLabel lblAlert1;
+    private javax.swing.JLabel lblAlert2;
+    private javax.swing.JLabel lblAlert3;
     private javax.swing.JTable tblInfo;
     private javax.swing.JTextField txtPlayerName;
     private javax.swing.JTextField txtScore;
