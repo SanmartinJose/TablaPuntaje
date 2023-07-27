@@ -62,7 +62,7 @@ public class FrmScoreTable extends javax.swing.JFrame {
         lblAlert3 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         btnDelete = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnClear = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -209,7 +209,12 @@ public class FrmScoreTable extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Clear");
+        btnClear.setText("Clear");
+        btnClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -219,7 +224,7 @@ public class FrmScoreTable extends javax.swing.JFrame {
                 .addGap(53, 53, 53)
                 .addComponent(btnDelete)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(btnClear)
                 .addGap(62, 62, 62))
         );
         jPanel3Layout.setVerticalGroup(
@@ -228,7 +233,7 @@ public class FrmScoreTable extends javax.swing.JFrame {
                 .addContainerGap(18, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnDelete)
-                    .addComponent(jButton1))
+                    .addComponent(btnClear))
                 .addGap(24, 24, 24))
         );
 
@@ -357,6 +362,14 @@ public class FrmScoreTable extends javax.swing.JFrame {
     }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+       int confirm = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que deseas reiniciar y borrar todos los datos?", "Confirmar reinicio", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            mongoDBConnection.getCollection().deleteMany(new Document());
+            JOptionPane.showMessageDialog(this, "¡Se han borrado todos los datos!", "Reinicio Exitoso", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_btnClearActionPerformed
+
     public void EmptyFields() {
         // Limpiar los campos después de guardar
         txtPlayerName.setText("");
@@ -401,9 +414,9 @@ public class FrmScoreTable extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnClear;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnRefresh;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
