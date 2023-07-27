@@ -1,12 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package ec.espe.edu.scoretable.view;
 
 import ec.edu.espe.scoretable.model.Player;
 import ec.edu.espe.scoretable.utils.MongoDBConnection;
 import org.bson.Document;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+
 
 /**
  *
@@ -45,8 +48,9 @@ public class FrmScoreTable extends javax.swing.JFrame {
         txtScore = new javax.swing.JTextField();
         btnAdd = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblInfo = new javax.swing.JTable();
         jSeparator2 = new javax.swing.JSeparator();
+        btnRefresh = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         btnDelete = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
@@ -85,18 +89,33 @@ public class FrmScoreTable extends javax.swing.JFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblInfo.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Nombre", "Puntaje", "Tiempo"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tblInfo);
+
+        btnRefresh.setText("Refersh");
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -105,27 +124,28 @@ public class FrmScoreTable extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(13, 13, 13)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnAdd)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(13, 13, 13)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(btnAdd)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel2))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtPlayerName, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(txtScore, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
-                                        .addComponent(txtTime, javax.swing.GroupLayout.Alignment.LEADING))))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 1, Short.MAX_VALUE))
+                                .addGap(10, 10, 10)
+                                .addComponent(btnRefresh))
+                            .addComponent(txtPlayerName, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(txtScore, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+                                .addComponent(txtTime, javax.swing.GroupLayout.Alignment.LEADING)))
+                        .addGap(0, 78, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jSeparator2)))
+                        .addComponent(jSeparator2))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -144,7 +164,9 @@ public class FrmScoreTable extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addComponent(txtScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnAdd)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAdd)
+                    .addComponent(btnRefresh))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -228,6 +250,40 @@ public class FrmScoreTable extends javax.swing.JFrame {
         EmptyFields();
     }//GEN-LAST:event_btnAddActionPerformed
 
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        // Obtener los datos de la base de datos MongoDB
+    List<Document> documents = mongoDBConnection.getCollection().find().into(new ArrayList<>());
+
+    // Ordenar los datos según los criterios (score de mayor a menor, time de menor a mayor en caso de empates)
+    Collections.sort(documents, new Comparator<Document>() {
+        @Override
+        public int compare(Document doc1, Document doc2) {
+            int score1 = doc1.getInteger("score");
+            int score2 = doc2.getInteger("score");
+            int time1 = doc1.getInteger("time");
+            int time2 = doc2.getInteger("time");
+
+            if (score1 != score2) {
+                return score2 - score1; // Ordenar por score de mayor a menor
+            } else {
+                return time1 - time2; // Ordenar por time de menor a mayor (si hay empate en score)
+            }
+        }
+    });
+
+    // Limpiar la tabla antes de mostrar los nuevos datos
+    DefaultTableModel model = (DefaultTableModel) tblInfo.getModel();
+    model.setRowCount(0);
+
+    // Agregar los datos ordenados a la tabla
+    for (Document doc : documents) {
+        String name = doc.getString("name");
+        int score = doc.getInteger("score");
+        int time = doc.getInteger("time");
+        model.addRow(new Object[]{name, score, time});
+    }
+    }//GEN-LAST:event_btnRefreshActionPerformed
+
     public void EmptyFields() {
         // Limpiar los campos después de guardar
         txtPlayerName.setText("");
@@ -273,6 +329,7 @@ public class FrmScoreTable extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnRefresh;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -284,7 +341,7 @@ public class FrmScoreTable extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblInfo;
     private javax.swing.JTextField txtPlayerName;
     private javax.swing.JTextField txtScore;
     private javax.swing.JTextField txtTime;
