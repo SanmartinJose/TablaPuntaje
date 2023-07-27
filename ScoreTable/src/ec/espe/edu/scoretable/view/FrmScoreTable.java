@@ -4,17 +4,24 @@
  */
 package ec.espe.edu.scoretable.view;
 
+import ec.edu.espe.scoretable.model.Player;
+import ec.edu.espe.scoretable.utils.MongoDBConnection;
+import org.bson.Document;
+
 /**
  *
  * @author Moreno Paul,The encoders; DCCO-ESPE
  */
 public class FrmScoreTable extends javax.swing.JFrame {
 
+    private MongoDBConnection mongoDBConnection;
     /**
      * Creates new form FrmScoreTable
      */
     public FrmScoreTable() {
         initComponents();
+        mongoDBConnection = new MongoDBConnection();
+        mongoDBConnection.connection("2Truths1LiePlayers");
     }
 
     /**
@@ -42,7 +49,6 @@ public class FrmScoreTable extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         jPanel3 = new javax.swing.JPanel();
         btnDelete = new javax.swing.JButton();
-        btnSave = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -73,6 +79,11 @@ public class FrmScoreTable extends javax.swing.JFrame {
         jLabel4.setText("Total Score:");
 
         btnAdd.setText("Add");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -143,8 +154,6 @@ public class FrmScoreTable extends javax.swing.JFrame {
 
         btnDelete.setText("Delete Player");
 
-        btnSave.setText("Save");
-
         jButton1.setText("Clear");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -154,23 +163,17 @@ public class FrmScoreTable extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(53, 53, 53)
                 .addComponent(btnDelete)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnSave)
-                    .addComponent(jButton1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 103, Short.MAX_VALUE)
+                .addComponent(jButton1)
                 .addGap(62, 62, 62))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnSave)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
-                .addContainerGap(7, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnDelete)
+                .addContainerGap(18, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnDelete)
+                    .addComponent(jButton1))
                 .addGap(24, 24, 24))
         );
 
@@ -206,6 +209,31 @@ public class FrmScoreTable extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+       String nombre = txtPlayerName.getText();
+        int tiempo = Integer.parseInt(txtTime.getText());
+        int puntajeTotal = Integer.parseInt(txtScore.getText());
+
+        // Crear un objeto Player con los datos ingresados
+        Player player = new Player(nombre, puntajeTotal, tiempo);
+
+        // Convertir el objeto Player a un Document de MongoDB
+        Document playerDocument = new Document("name", player.getName())
+                                    .append("score", player.getScore())
+                                    .append("time", player.getTime());
+
+        mongoDBConnection.getCollection().insertOne(playerDocument);
+
+        EmptyFields();
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    public void EmptyFields() {
+        // Limpiar los campos después de guardar
+        txtPlayerName.setText("");
+        txtTime.setText("");
+        txtScore.setText("");
+    }
 
     /**
      * @param args the command line arguments
@@ -245,7 +273,6 @@ public class FrmScoreTable extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnDelete;
-    private javax.swing.JButton btnSave;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
