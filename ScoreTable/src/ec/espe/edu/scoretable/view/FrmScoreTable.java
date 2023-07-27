@@ -60,6 +60,7 @@ public class FrmScoreTable extends javax.swing.JFrame {
         lblAlert1 = new javax.swing.JLabel();
         lblAlert2 = new javax.swing.JLabel();
         lblAlert3 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         btnDelete = new javax.swing.JButton();
         btnClear = new javax.swing.JButton();
@@ -87,7 +88,7 @@ public class FrmScoreTable extends javax.swing.JFrame {
 
         jLabel2.setText("Player Name:");
 
-        jLabel3.setText("Time:");
+        jLabel3.setText("Time(seg):");
 
         jLabel4.setText("Total Score:");
 
@@ -135,6 +136,8 @@ public class FrmScoreTable extends javax.swing.JFrame {
         lblAlert3.setForeground(new java.awt.Color(255, 51, 51));
         lblAlert3.setText("*Ingrese un Puntaje Valido");
 
+        jLabel5.setText("seconds");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -156,9 +159,12 @@ public class FrmScoreTable extends javax.swing.JFrame {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txtPlayerName, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(txtScore, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
-                                        .addComponent(txtTime, javax.swing.GroupLayout.Alignment.LEADING)))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(txtScore, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+                                            .addComponent(txtTime, javax.swing.GroupLayout.Alignment.LEADING))
+                                        .addGap(4, 4, 4)
+                                        .addComponent(jLabel5)))
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblAlert2)
@@ -185,7 +191,8 @@ public class FrmScoreTable extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(txtTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblAlert2))
+                    .addComponent(lblAlert2)
+                    .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -209,7 +216,7 @@ public class FrmScoreTable extends javax.swing.JFrame {
             }
         });
 
-        btnClear.setText("Clear");
+        btnClear.setText("Clear DataBase");
         btnClear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnClearActionPerformed(evt);
@@ -421,6 +428,7 @@ public class FrmScoreTable extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
